@@ -21,6 +21,7 @@ public class SkeletonMatch : MonoBehaviour
 
     public Transform head_Neck;
     public Transform head_Head;
+    public Transform head_RightEye;
 
     public Transform rightHand_ThumbProximal;
     public Transform rightHand_ThumbIntermediate;
@@ -51,6 +52,7 @@ public class SkeletonMatch : MonoBehaviour
         body_Chest = DetectReferencesByNaming(transform, "Chest");
         head_Neck = DetectReferencesByNaming(transform, "Neck");
         head_Head = DetectReferencesByNaming(transform, "Head");
+        head_RightEye = DetectReferencesByNaming(transform, "Eye");
 
         rightArm_Shoulder = DetectReferencesByNaming(transform, "Scapula");
         rightArm_UpperArm = DetectReferencesByNaming(transform, "Shoulder");
@@ -110,6 +112,7 @@ public class SkeletonMatch : MonoBehaviour
 
             head_Neck.position= avatar.head_Neck.position;
             head_Head.position= avatar.head_Head.position;
+            head_RightEye.position = avatar.head_RightEye.position;
 
             rightHand_ThumbProximal.position= avatar.rightHand_ThumbProximal.position;
             rightHand_ThumbIntermediate.position= avatar.rightHand_ThumbIntermediate.position;

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class SkeletonPositionSaver : MonoBehaviour
 {
 
-    
-	public void Save(string filename)
+
+    public void Save(string filename)
     {
 
 
@@ -18,7 +18,7 @@ public class SkeletonPositionSaver : MonoBehaviour
             StreamWriter sw = new StreamWriter(fi.Create());
 
             List<Transform> lt = new List<Transform>();
-            //lt.Add(am.body_Hips);
+            lt.Add(am.body_Hips);
             lt.Add(am.body_Spine);
             lt.Add(am.body_Chest);
 
@@ -32,7 +32,7 @@ public class SkeletonPositionSaver : MonoBehaviour
             lt.Add(am.rightLeg_Toes);
             lt.Add(am.head_Neck);
             lt.Add(am.head_Head);
-
+            lt.Add(am.head_RightEye);
 
             lt.Add(am.rightHand_ThumbProximal);
             lt.Add(am.rightHand_ThumbIntermediate);
@@ -61,12 +61,14 @@ public class SkeletonPositionSaver : MonoBehaviour
                 if (item)
                 {
                     sw.WriteLine(item.gameObject.name);
-                    string tmp = item.position.ToString("f4");
+                    Vector3 vec = item.localPosition;
+                    vec.x = -vec.x;
+                    string tmp = vec.ToString("f4");
                     tmp = tmp.Substring(1, tmp.Length - 2);
                     Debug.Log(tmp);
                     sw.WriteLine(tmp);
                 }
-                
+
             }
             sw.Close();
         }
@@ -74,8 +76,64 @@ public class SkeletonPositionSaver : MonoBehaviour
         {
             Debug.Log("haven't got AvatarMatch.");
         }
-        
+
     }
-	
-	
+
+
 }
+/*
+ * maya读取文档的脚本
+ * 
+ * 第一步是载入骨架
+ * 然后选择骨架最顶端节点
+ * 运行脚本
+ proc int CheckMatch(string $a,string $matchString,vector $pos)
+{
+    string $children[] = `listRelatives -children $a`;
+    string $i;
+    string $matchName =match( $matchString, $a);
+    
+    if(size($matchName)>0)
+    {
+        setAttr -l false ($matchName+".tx");
+        setAttr -l false ($matchName+".ty");
+        setAttr -l false ($matchName+".tz");
+        setAttr($matchName+".tx",$pos.x);
+        setAttr($matchName+".ty",$pos.y);
+        setAttr($matchName+".tz",$pos.z);
+        
+        return true;
+    }
+   for( $i in $children)
+   {
+            int $result =      CheckMatch($i,$matchString,$pos);   
+            if($result == true)
+            {
+                return true;
+            }
+   }
+    return false;
+}
+
+string $sel[] = `ls -sl`;
+
+string $fileName = "G:\\Unity\\poser\\skeleton.txt";
+$fileId=fopen($fileName,"r"); 
+
+string $nextLine = `fgetline $fileId`;
+
+
+
+
+while ( size( $nextLine ) > 0 ) 
+{
+    int $count = size($nextLine)-1;
+    $nextLine = `substring $nextLine 1 $count`;
+    $nextPos = `fgetline $fileId`;
+    vector $pos = $nextPos;
+
+    CheckMatch($sel[0],$nextLine,$pos);
+    $nextLine = `fgetline $fileId`;
+}
+fclose $fileId;
+*/
