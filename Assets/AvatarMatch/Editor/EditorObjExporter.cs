@@ -15,6 +15,7 @@ using System.IO;
 using System.Text;
 using System;
 
+
 struct ObjMaterial
 {
     public string name;
@@ -163,11 +164,16 @@ public class EditorObjExporter : ScriptableObject
         if (exportedObjects > 0)
         {
 
-     
            MeshesToFile(mfList.ToArray(), targetFolder, targetFolder);
 
 
            Debug.Log("Objects exported " + targetFolder+".");
+
+           string args = "/Select, " + System.Environment.CurrentDirectory+"\\"+targetFolder+"\\"+targetFolder+".obj";
+
+           System.Diagnostics.ProcessStartInfo pfi = new System.Diagnostics.ProcessStartInfo("Explorer.exe", args);
+           System.Diagnostics.Process.Start(pfi);
+
         }
         else
             EditorUtility.DisplayDialog("Objects not exported", "Make sure at least some of your selected objects have mesh filters!", "");

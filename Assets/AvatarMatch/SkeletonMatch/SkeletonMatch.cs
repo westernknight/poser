@@ -45,6 +45,10 @@ public class SkeletonMatch : MonoBehaviour
     public Transform rightHand_LittleTip;
 
     public AvatarMatch avatar;
+    void OnEnable()
+    {
+        AutoDetectReferences();
+    }
     public void AutoDetectReferences()
     {
         body_Hips = DetectReferencesByNaming(transform, "Root");
@@ -96,49 +100,60 @@ public class SkeletonMatch : MonoBehaviour
     {
         if (avatar)
         {
-            body_Hips.position= avatar.body_Hips.position;
-            body_Spine.position= avatar.body_Spine.position;
-            body_Chest.position= avatar.body_Chest.position;
+            PositionAssignment(body_Hips, avatar.body_Hips);
+            PositionAssignment(body_Spine, avatar.body_Spine);
+            PositionAssignment(body_Chest, avatar.body_Chest);
 
-            rightArm_Shoulder.position= avatar.rightArm_Shoulder.position;
-            rightArm_UpperArm.position= avatar.rightArm_UpperArm.position;
-            rightArm_LowerArm.position= avatar.rightArm_LowerArm.position;
-            rightArm_Hand.position= avatar.rightArm_Hand.position;
+            PositionAssignment(rightArm_Shoulder, avatar.rightArm_Shoulder);
+            PositionAssignment(rightArm_UpperArm, avatar.rightArm_UpperArm);
+            PositionAssignment(rightArm_LowerArm, avatar.rightArm_LowerArm);
+            PositionAssignment(rightArm_Hand, avatar.rightArm_Hand);
 
-            rightLeg_UpperLeg.position= avatar.rightLeg_UpperLeg.position;
-            rightLeg_LowerLeg.position= avatar.rightLeg_LowerLeg.position;
-            rightLeg_Foot.position= avatar.rightLeg_Foot.position;
-            rightLeg_Toes.position= avatar.rightLeg_Toes.position;
+            PositionAssignment(rightLeg_UpperLeg, avatar.rightLeg_UpperLeg);
+            PositionAssignment(rightLeg_LowerLeg, avatar.rightLeg_LowerLeg);
+            PositionAssignment(rightLeg_Foot, avatar.rightLeg_Foot);
+            PositionAssignment(rightLeg_Toes, avatar.rightLeg_Toes);
 
-            head_Neck.position= avatar.head_Neck.position;
-            head_Head.position= avatar.head_Head.position;
-            head_RightEye.position = avatar.head_RightEye.position;
+            PositionAssignment(head_Neck, avatar.head_Neck);
+            PositionAssignment(head_Head, avatar.head_Head);
+            PositionAssignment(head_RightEye, avatar.head_RightEye);
 
-            rightHand_ThumbProximal.position= avatar.rightHand_ThumbProximal.position;
-            rightHand_ThumbIntermediate.position= avatar.rightHand_ThumbIntermediate.position;
-            rightHand_ThumbDistal.position= avatar.rightHand_ThumbDistal.position;
-            rightHand_ThumbTip.position= avatar.rightHand_ThumbTip.position;
-            rightHand_IndexProximal.position= avatar.rightHand_IndexProximal.position;
-            rightHand_IndexIntermediate.position= avatar.rightHand_IndexIntermediate.position;
-            rightHand_IndexDistal.position= avatar.rightHand_IndexDistal.position;
-            rightHand_IndexTip.position= avatar.rightHand_IndexTip.position;
-            rightHand_MiddleProximal.position= avatar.rightHand_MiddleProximal.position;
-            rightHand_MiddleIntermediate.position= avatar.rightHand_MiddleIntermediate.position;
-            rightHand_MiddleDistal.position= avatar.rightHand_MiddleDistal.position;
-            rightHand_MiddleTip.position= avatar.rightHand_MiddleTip.position;
-            rightHand_RingProximal.position= avatar.rightHand_RingProximal.position;
-            rightHand_RingIntermediate.position= avatar.rightHand_RingIntermediate.position;
-            rightHand_RingDistal.position= avatar.rightHand_RingDistal.position;
-            rightHand_RingTip.position= avatar.rightHand_RingTip.position;
-            rightHand_LittleProximal.position= avatar.rightHand_LittleProximal.position;
-            rightHand_LittleIntermediate.position= avatar.rightHand_LittleIntermediate.position;
-            rightHand_LittleDistal.position= avatar.rightHand_LittleDistal.position;
-            rightHand_LittleTip.position= avatar.rightHand_LittleTip.position;
+            PositionAssignment(rightHand_ThumbProximal, avatar.rightHand_ThumbProximal);
+            PositionAssignment(rightHand_ThumbIntermediate, avatar.rightHand_ThumbIntermediate);
+            PositionAssignment(rightHand_ThumbDistal, avatar.rightHand_ThumbDistal);
+            PositionAssignment(rightHand_ThumbTip, avatar.rightHand_ThumbTip);
+            PositionAssignment(rightHand_IndexProximal, avatar.rightHand_IndexProximal);
+            PositionAssignment(rightHand_IndexIntermediate, avatar.rightHand_IndexIntermediate);
+            PositionAssignment(rightHand_IndexDistal, avatar.rightHand_IndexDistal);
+            PositionAssignment(rightHand_IndexTip, avatar.rightHand_IndexTip);
+            PositionAssignment(rightHand_MiddleProximal, avatar.rightHand_MiddleProximal);
+            PositionAssignment(rightHand_MiddleIntermediate, avatar.rightHand_MiddleIntermediate);
+            PositionAssignment(rightHand_MiddleDistal, avatar.rightHand_MiddleDistal);
+            PositionAssignment(rightHand_MiddleTip, avatar.rightHand_MiddleTip);
+            PositionAssignment(rightHand_RingProximal, avatar.rightHand_RingProximal);
+            PositionAssignment(rightHand_RingIntermediate, avatar.rightHand_RingIntermediate);
+            PositionAssignment(rightHand_RingDistal, avatar.rightHand_RingDistal);
+            PositionAssignment(rightHand_RingTip, avatar.rightHand_RingTip);
+            PositionAssignment(rightHand_LittleProximal, avatar.rightHand_LittleProximal);
+            PositionAssignment(rightHand_LittleIntermediate, avatar.rightHand_LittleIntermediate);
+            PositionAssignment(rightHand_LittleDistal, avatar.rightHand_LittleDistal);
+            PositionAssignment(rightHand_LittleTip, avatar.rightHand_LittleTip);
+
+
+
         }
         else
         {
             Debug.Log("avatar is null");
         }
+    }
+    void PositionAssignment(Transform a, Transform b)
+    {
+        if (a != null && b != null)
+        {
+            a.position = b.position;
+        }
+
     }
     Transform DetectReferencesByNaming(Transform t, string name)
     {

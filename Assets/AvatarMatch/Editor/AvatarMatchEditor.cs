@@ -407,7 +407,7 @@ public class AvatarMatchEditor : Editor
         
 
         mTarget.Update();
-        FingersSlider();
+        //FingersSlider();
         
 
         showBodyStatus = EditorGUILayout.Foldout(showBodyStatus, "Show Body Status");

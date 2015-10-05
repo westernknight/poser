@@ -163,17 +163,17 @@ public class AvatarMatch : MonoBehaviour
         DetectLimb(AvatarNaming.BoneType.Arm, AvatarNaming.BoneSide.Right, ref rightArm_UpperArm, ref rightArm_LowerArm, ref rightArm_Hand, children);
         DetectLimb(AvatarNaming.BoneType.Leg, AvatarNaming.BoneSide.Left, ref leftLeg_UpperLeg, ref leftLeg_LowerLeg, ref leftLeg_Foot, children);
         DetectLimb(AvatarNaming.BoneType.Leg, AvatarNaming.BoneSide.Right, ref rightLeg_UpperLeg, ref rightLeg_LowerLeg, ref rightLeg_Foot, children);
-        if (leftLeg_Foot&&leftLeg_Foot.childCount > 0  )
+        if (leftLeg_Foot && leftLeg_Foot.childCount > 0)
         {
             leftLeg_Toes = leftLeg_Foot.GetChild(0);
         }
-        if (rightLeg_Foot&&rightLeg_Foot.childCount > 0)
+        if (rightLeg_Foot && rightLeg_Foot.childCount > 0)
         {
             rightLeg_Toes = rightLeg_Foot.GetChild(0);
         }
         head_Head = AvatarNaming.GetBone(children, AvatarNaming.BoneType.Head);
 
-        body_LeftBreast = AvatarNaming.GetBone(children,AvatarNaming.BoneType.Breast, AvatarNaming.BoneSide.Left);
+        body_LeftBreast = AvatarNaming.GetBone(children, AvatarNaming.BoneType.Breast, AvatarNaming.BoneSide.Left);
         body_RightBreast = AvatarNaming.GetBone(children, AvatarNaming.BoneType.Breast, AvatarNaming.BoneSide.Right);
 
         body_Hips = AvatarNaming.GetNamingMatch(children, AvatarNaming.pelvis);
@@ -198,12 +198,12 @@ public class AvatarMatch : MonoBehaviour
         leftArm_Shoulder = GetParentBeforeSameParent(leftArm_UpperArm, rightArm_UpperArm);
         rightArm_Shoulder = GetParentBeforeSameParent(rightArm_UpperArm, leftArm_UpperArm);
 
-        if (head_Head.parent!=body_Hips&&head_Head.parent!=body_Spine&&head_Head.parent!=body_Chest)
+        if (head_Head.parent != body_Hips && head_Head.parent != body_Spine && head_Head.parent != body_Chest)
         {
             head_Neck = head_Head.parent;
         }
         Transform[] eyes = AvatarNaming.GetBonesOfType(AvatarNaming.BoneType.Eye, children);
-        if (eyes.Length>1)
+        if (eyes.Length > 1)
         {
             head_LeftEye = GetLeftest(eyes);
             head_RightEye = GetRightest(eyes);
@@ -301,7 +301,7 @@ public class AvatarMatch : MonoBehaviour
     }
     bool IsParent(Transform t, Transform parent)
     {
-        if (t!=null && parent!=null)
+        if (t != null && parent != null)
         {
             if (t.parent == parent)
             {
@@ -319,18 +319,18 @@ public class AvatarMatch : MonoBehaviour
         Transform tmp1 = t.parent;
         if (tmp1 == me)
         {
-            return null;
+            return t;
         }
         while (tmp1 != null)
         {
             Transform tmp = tmp1;
-            
+
             tmp1 = tmp1.parent;
             if (tmp1 == me)
             {
                 return tmp;
             }
-            
+
         }
 
         return t;
@@ -340,31 +340,31 @@ public class AvatarMatch : MonoBehaviour
         public Transform child;
         public int level;
     }
-    Transform[] FindDistals(Transform hand)
+    /// <summary>
+    /// 通过母亲，寻找孩子中含有母亲包含的名字的最后一个孩子
+    /// </summary>
+    /// <param name="p"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    Transform GetLastChildByContainName(Transform p, string name)
     {
-        if (hand == null) return null;
-
-        Action<Transform, int> act = null;
         List<ChildLevel> childList = new List<ChildLevel>();
-
-        act += (t, l) =>
+        for (int i = 0; i < p.childCount; i++)
         {
-
-            if (t.childCount == 0)
+            abc(ref childList, p.GetChild(i), 0);
+        }
+        for (int i = 0; i < childList.Count; i++)
+        {
+            if (childList[i].child.name.Contains(name) == false)
             {
-                ChildLevel cl = new ChildLevel();
-                cl.child = t;
-                cl.level = l;
-                childList.Add(cl);
+                childList.RemoveAt(i);
+                i--;
             }
-            l++;
-            for (int i = 0; i < t.childCount; i++)
-            {
-                act(t.GetChild(i), l);
-            }
-        };
-        act(hand, 0);
-
+        }
+        if (childList.Count == 0)
+        {
+            return null;
+        }
         childList.Sort((left, right) =>
         {
             if (left.level < right.level)
@@ -374,31 +374,57 @@ public class AvatarMatch : MonoBehaviour
             else
                 return -1;
         });
-        for (int i = 1; i < childList.Count; i++)
-        {
-            if (childList[i].level < childList[i - 1].level)
-            {
-                childList.RemoveRange(i, childList.Count - i);
-                break;
-            }
-        }
 
-        childList.Sort((left, right) =>
-        {
-            if (left.child.position.z < right.child.position.z)
-                return 1;
-            else if (left.child.position.z == right.child.position.z)
-                return 0;
-            else
-                return -1;
-        });
+        return childList[0].child;
 
-        Transform[] distal = new Transform[childList.Count];
-        for (int i = 0; i < childList.Count; i++)
+
+    }
+    void abc(ref List<ChildLevel> k, Transform c, int level)
+    {
+        level++;
+        for (int i = 0; i < c.childCount; i++)
         {
-            distal[i] = childList[i].child;
+            abc(ref k, c.GetChild(i), level);
         }
-        return distal;
+        ChildLevel cl = new ChildLevel();
+        cl.child = c;
+        cl.level = level;
+        k.Add(cl);
+    }
+
+    Transform[] FindDistals(Transform hand)
+    {
+        if (hand == null) return null;
+
+        List<Transform> childList = new List<Transform>();  
+
+
+        Transform t = GetLastChildByContainName(hand, "Thumb");
+        if (t!=null)
+        {
+            childList.Add(t);
+        }
+        t = GetLastChildByContainName(hand, "Index");
+        if (t != null)
+        {
+            childList.Add(t);
+        }
+        t = GetLastChildByContainName(hand, "Middle");
+        if (t != null)
+        {
+            childList.Add(t);
+        }
+        t = GetLastChildByContainName(hand, "Ring");
+        if (t != null)
+        {
+            childList.Add(t);
+        }
+        t = GetLastChildByContainName(hand, "Pinky");
+        if (t != null)
+        {
+            childList.Add(t);
+        }
+        return childList.ToArray();
     }
     Transform GetLeftest(Transform[] t)
     {
@@ -406,7 +432,7 @@ public class AvatarMatch : MonoBehaviour
         Transform tmp = t[0];
         for (int i = 0; i < t.Length; i++)
         {
-            if (t[i].position.x<x)
+            if (t[i].position.x < x)
             {
                 tmp = t[i];
                 x = t[i].position.x;
